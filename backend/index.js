@@ -103,6 +103,7 @@ app.use(cors({origin: "*",}));
           console.error("Error fetching user:", error);
           return res.status(500).json({ message: "Internal server error" });
         }
+        
       });
       
       
