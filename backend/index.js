@@ -1,16 +1,43 @@
 require("dotenv").config();
 const config = require("./config.json");
 const mongoose = require("mongoose");
+const Review = require("./models/review.model.js");
 const bcrypt = require("bcrypt");
 const express = require("express");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const User = require("./models/user.model");
 const {authenticateToken} = require("./utilities");
+const Story = require("./models/story.model");
+const multer = require("multer");
+const path = require("path");
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/"); 
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); // اسم ملف الصورة
+  },
+});
+const upload = multer({
+  storage: storage,
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = /jpeg|jpg|png|gif/;
+    const isValidType = allowedTypes.test(path.extname(file.originalname).toLowerCase()) && allowedTypes.test(file.mimetype);
+    if (isValidType) {
+      cb(null, true);
+    } else {
+      cb("Only images are allowed.");
+    }
+  },
+});
+
 
 mongoose.connect(config.connectionString);
 
 const app = express();
+app.use("/uploads", express.static("uploads"));
+
 
 app.use(cors());
 app.use(express.json());
@@ -105,7 +132,168 @@ app.use(cors({origin: "*",}));
         }
         
       });
+      app.put("/updateUser", authenticateToken, async (req, res) => {
+        try {
+          const { userId } = req.user; 
+          const { fullName, email } = req.body;
+      
+          if (!fullName && !email) {
+            return res.status(400).json({ error: true, message: "Nothing to update." });
+          }
+      
+          const updateFields = {};
+          if (fullName) updateFields.fullName = fullName;
+          if (email) updateFields.email = email;
+      
+          const updatedUser = await User.findByIdAndUpdate(userId, updateFields, {
+            new: true, 
+          });
+      
+          if (!updatedUser) {
+            return res.status(404).json({ error: true, message: "User not found." });
+          }
+      
+          return res.status(200).json({
+            error: false,
+            user: updatedUser,
+            message: "User updated successfully.",
+          });
+        } catch (error) {
+          console.error("Error in /updateUser route:", error); 
+          return res.status(500).json({ error: true, message: "Internal Server Error" });
+        }
+      });
       
       
-      app.listen(3000);
+        
+      app.post("/addStory", authenticateToken, upload.single("image"), async (req, res) => {
+        try {
+          const { userId } = req.user; 
+          const { title, content, destination } = req.body;
+      
+          if (!title || !content || !destination) {
+            return res.status(400).json({ error: true, message: "All fields are required." });
+          }
+      
+          const storyData = {
+            userId,
+            title,
+            content,
+            destination,
+            createdAt: new Date(),
+          };
+      
+          if (req.file) {
+            storyData.image = req.file.path; 
+          }
+      
+          const story = new Story(storyData);
+          await story.save();
+      
+          return res.status(201).json({
+            error: false,
+            story,
+            message: "Story added successfully.",
+          });
+        } catch (error) {
+          console.error("Error in /addStory route:", error);
+          return res.status(500).json({ error: true, message: "Internal Server Error" });
+        }
+      });
+      
+      app.get("/getStories", async (req, res) => {
+        try {
+          const stories = await Story.find()
+            .populate("userId", "fullName email")
+            .sort({ createdAt: -1 });
+      
+          const formattedStories = await Promise.all(
+            stories.map(async (story) => {
+              const reviews = await Review.find({ storyId: story._id });
+              const averageRating =
+                reviews.length > 0
+                  ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length
+                  : null;
+      
+              return {
+                _id: story._id,
+                title: story.title,
+                content: story.content,
+                destination: story.destination,
+                createdAt: story.createdAt,
+                userId: story.userId,
+                image: story.image ? `${req.protocol}://${req.get("host")}/${story.image}` : null,
+                averageRating,
+              };
+            })
+          );
+      
+          return res.status(200).json({
+            error: false,
+            stories: formattedStories,
+            message: "Stories fetched successfully.",
+          });
+        } catch (error) {
+          console.error("Error in /getStories route:", error);
+          return res.status(500).json({ error: true, message: "Internal Server Error" });
+        }
+      });
+      
+app.post("/addReview", authenticateToken, async (req, res) => {
+  try {
+    const { storyId, rating, comment } = req.body;
+    const { userId } = req.user; 
+
+    if (!storyId || !rating) {
+      return res.status(400).json({ error: true, message: "Story ID and rating are required." });
+    }
+
+    if (rating < 1 || rating > 5) {
+      return res.status(400).json({ error: true, message: "Rating must be between 1 and 5." });
+    }
+
+    const review = new Review({
+      userId,
+      storyId,
+      rating,
+      comment,
+    });
+
+    await review.save();
+
+    return res.status(201).json({
+      error: false,
+      review,
+      message: "Review added successfully.",
+    });
+  } catch (error) {
+    console.error("Error in /addReview route:", error);
+    return res.status(500).json({ error: true, message: "Internal Server Error" });
+  }
+});
+app.get("/getReviews/:storyId", async (req, res) => {
+  try {
+    const { storyId } = req.params;
+
+    const reviews = await Review.find({ storyId })
+      .populate("userId", "fullName email")
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      error: false,
+      reviews,
+      message: "Reviews fetched successfully.",
+    });
+  } catch (error) {
+    console.error("Error in /getReviews route:", error);
+    return res.status(500).json({ error: true, message: "Internal Server Error" });
+  }
+});
+
+
+      
+
+      
+      
+      app.listen(5000);
       module.exports = app
