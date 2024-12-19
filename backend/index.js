@@ -11,6 +11,7 @@ const {authenticateToken} = require("./utilities");
 const Story = require("./models/story.model");
 const multer = require("multer");
 const path = require("path");
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads/"); 
@@ -239,56 +240,82 @@ app.use(cors({origin: "*",}));
         }
       });
       
-app.post("/addReview", authenticateToken, async (req, res) => {
-  try {
-    const { storyId, rating, comment } = req.body;
-    const { userId } = req.user; 
-
-    if (!storyId || !rating) {
-      return res.status(400).json({ error: true, message: "Story ID and rating are required." });
-    }
-
-    if (rating < 1 || rating > 5) {
-      return res.status(400).json({ error: true, message: "Rating must be between 1 and 5." });
-    }
-
-    const review = new Review({
-      userId,
-      storyId,
-      rating,
-      comment,
-    });
-
-    await review.save();
-
-    return res.status(201).json({
-      error: false,
-      review,
-      message: "Review added successfully.",
-    });
-  } catch (error) {
-    console.error("Error in /addReview route:", error);
-    return res.status(500).json({ error: true, message: "Internal Server Error" });
-  }
-});
-app.get("/getReviews/:storyId", async (req, res) => {
+      app.post("/addReview", authenticateToken, async (req, res) => {
+        try {
+          const { itemId, itemType, rating, comment } = req.body; // إضافة itemType و itemId
+          const { userId } = req.user;
+      
+          // التحقق من وجود itemId و rating و itemType
+          if (!itemId || !rating || !itemType) {
+            return res.status(400).json({ error: true, message: "Item ID, rating, and item type are required." });
+          }
+      
+          if (rating < 1 || rating > 5) {
+            return res.status(400).json({ error: true, message: "Rating must be between 1 and 5." });
+          }
+      
+          // إنشاء المراجعة
+          const review = new Review({
+            userId,
+            itemId,    // المعرف الخاص بالعنصر (مثل storyId أو productId)
+            itemType,  // نوع العنصر (مثل "story" أو "product")
+            rating,
+            comment,
+          });
+      
+          await review.save();
+      
+          return res.status(201).json({
+            error: false,
+            review,
+            message: "Review added successfully.",
+          });
+        } catch (error) {
+          console.error("Error in /addReview route:", error);
+          return res.status(500).json({ error: true, message: "Internal Server Error" });
+        }
+      });
+      
+      app.get("/getReviews/:itemId", async (req, res) => {
+        try {
+          const { itemId } = req.params; // جلب itemId من الـ URL
+      
+          // جلب المراجعات بناءً على itemId
+          const reviews = await Review.find({ itemId })
+            .populate("userId", "fullName email") // جلب بيانات المستخدم (مثل الاسم والبريد الإلكتروني)
+            .sort({ createdAt: -1 }); // ترتيب المراجعات من الأحدث إلى الأقدم
+      
+          return res.status(200).json({
+            error: false,
+            reviews,
+            message: "Reviews fetched successfully.",
+          });
+        } catch (error) {
+          console.error("Error in /getReviews route:", error);
+          return res.status(500).json({ error: true, message: "Internal Server Error" });
+        }
+      });
+      
+app.get("/getStories/:storyId", async (req, res) => {
   try {
     const { storyId } = req.params;
+    const story = await Story.findById(storyId).populate("userId", "fullName email");
 
-    const reviews = await Review.find({ storyId })
-      .populate("userId", "fullName email")
-      .sort({ createdAt: -1 });
+    if (!story) {
+      return res.status(404).json({ error: true, message: "Story not found" });
+    }
 
     return res.status(200).json({
       error: false,
-      reviews,
-      message: "Reviews fetched successfully.",
+      story,
+      message: "Story fetched successfully",
     });
   } catch (error) {
-    console.error("Error in /getReviews route:", error);
+    console.error("Error fetching story details:", error);
     return res.status(500).json({ error: true, message: "Internal Server Error" });
   }
 });
+
 
 
       

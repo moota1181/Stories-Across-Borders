@@ -2,11 +2,12 @@ import React from 'react';
 import './LoginPage.css';
 import { useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link , useNavigate} from 'react-router-dom';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -14,11 +15,10 @@ const LoginPage = () => {
     const result = await callApi(url, 'POST', { email, password });
 
     if (result.error) {
-      // alert('Login Failed: ' + result.error);
       console.log('Login Failed: ' + result.error.message);
 
     } else {
-      alert('Login Successful!');
+      navigate('/Homepage');
       console.log('User Data:', result);
     }
   }

@@ -10,9 +10,9 @@ function authenticateToken(req, res, next) {
 
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
     if (err) {
-      return res.status(403).json({ error: true, message: "Invalid access token." });
+      return res.status(403).json({ error: true, message: "Invalid or expired access token." });
     }
-    req.user = user;
+    req.user = user; // تخزين بيانات المستخدم المستخلصة من التوكن
     next();
   });
 }

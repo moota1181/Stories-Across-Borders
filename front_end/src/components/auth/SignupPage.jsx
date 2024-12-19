@@ -16,7 +16,6 @@ const SignupPage = () => {
     const result = await callApi(url, 'POST', { fullName, email, password });
 
     if (result.error) {
-      // alert('Login Failed: ' + result.error);
       console.log('Signup Failed: ' + result.error.message);
 
     } else {
