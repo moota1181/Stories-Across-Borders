@@ -4,7 +4,6 @@ import SignUp from "./components/auth/SignupPage";
 import Homepage from "./components/auth/Homepage";
 import StoryDetails from "./components/auth/StoryDetails";
 import AddStoryModal from "./components/auth/AddStoryModal";
-import ReviewPage from "./components/auth/Reviewpage";
 import HelpandSupport from "./components/HelpandSupport";
 
 
@@ -12,6 +11,7 @@ import HelpandSupport from "./components/HelpandSupport";
 // import * as ROUTES from "./constants/routes";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import CartPage from "./components/CartPage"; 
 
 const theme = createTheme();
 
@@ -29,7 +29,6 @@ function App() {
           <Route path={"/Homepage"} element={<Homepage />} />
           <Route path={"/story/:storyId"} element={<StoryDetails />} />
           <Route path={"/AddStoryModal"} element={<AddStoryModal />} />
-          <Route path={"/review/:storyId"} element={<ReviewPage />} />
           <Route path={"/HelpandSupport"} element={<HelpandSupport />} />
 
 
