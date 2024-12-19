@@ -5,6 +5,7 @@ import SignUp from "./components/auth/SignupPage";
 // import * as ROUTES from "./constants/routes";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import CartPage from "./components/CartPage"; 
 
 const theme = createTheme();
 
@@ -19,6 +20,7 @@ function App() {
           </Route>
           {/* {/* <Route path={ROUTES.SIGN_IN} element={<SignIn />} /> */}
           <Route path={"/signup"} element={<SignUp />} />
+          <Route path={"/cart"} element={<CartPage />} />
         </Routes>
       </Router>
     </ThemeProvider>
