@@ -1,115 +1,96 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import { Modal, Box, Button, TextField, Snackbar, Alert } from '@mui/material';
+import './addSturyModal.css';
 
-const AddStoryModal = ({ open, handleClose, refreshStories }) => {
-  const [formData, setFormData] = useState({
-    title: '',
-    content: '',
-    destination: '',
-    image: null,
-  });
-  const [error, setError] = useState(null);
+const AddStoryModel = () => {
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [author, setAuthor] = useState('');
+  const [tags, setTags] = useState('');
+  const [error, setError] = useState('');
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+  // Handle form submission
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-  const handleFileChange = (e) => {
-    setFormData({ ...formData, image: e.target.files[0] });
-  };
-
-  const handleSubmit = async () => {
-    const accessToken = localStorage.getItem('accessToken');
-    if (!accessToken) {
-      setError('You need to be logged in to add a story.');
+    if (!title || !content || !author) {
+      setError('Please fill out all required fields');
       return;
     }
-  
-    const data = new FormData();
-    data.append('title', formData.title);
-    data.append('content', formData.content);
-    data.append('destination', formData.destination);
-    if (formData.image) {
-      data.append('image', formData.image);
-    }
-  
-    try {
-      await axios.post('http://localhost:5000/addStory', data, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-  
-      handleClose(); // إغلاق المودال
-      refreshStories(); // تحديث القصص
-    } catch (error) {
-      console.error('Error adding story:', error.response?.data || error.message);
-    }
+
+    const newStory = {
+      title,
+      content,
+      author,
+      tags,
+      createdAt: new Date().toISOString(), // This would typically be set by the backend
+    };
+
+    // Simulate API call
+    console.log('Story Added:', newStory);
+
+    // Reset the form fields
+    setTitle('');
+    setContent('');
+    setAuthor('');
+    setTags('');
+    setError('');
   };
-  
 
   return (
-    <>
-      {error && (
-        <Snackbar
-          open={error !== null}
-          autoHideDuration={6000}
-          onClose={() => setError(null)}
-        >
-          <Alert severity="error" sx={{ width: '100%' }}>
-            {error}
-          </Alert>
-        </Snackbar>
-      )}
-
-      <Modal open={open} onClose={handleClose}>
-        <Box sx={{ p: 4, bgcolor: 'white', mx: 'auto', my: '20%', width: '400px', borderRadius: 2 }}>
-          <h3>Add a New Story</h3>
-          <TextField
-            fullWidth
-            label="Title"
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-            margin="normal"
-            required
-          />
-          <TextField
-            fullWidth
-            label="Content"
-            name="content"
-            value={formData.content}
-            onChange={handleChange}
-            margin="normal"
-            required
-            multiline
-            rows={4}
-          />
-          <TextField
-            fullWidth
-            label="Destination"
-            name="destination"
-            value={formData.destination}
-            onChange={handleChange}
-            margin="normal"
-            required
-          />
+    <div className="add-story-container">
+      <h2>Add a New Story</h2>
+      {error && <div className="error-message">{error}</div>}
+      <form onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label htmlFor="title">Story Title</label>
           <input
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            style={{ margin: '16px 0' }}
+            type="text"
+            id="title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Enter story title"
+            required
           />
-          <Button variant="contained" color="primary" onClick={handleSubmit}>
-            Add Story
-          </Button>
-        </Box>
-      </Modal>
-    </>
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="content">Story Content</label>
+          <textarea
+            id="content"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            placeholder="Enter story content"
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="author">Author Name</label>
+          <input
+            type="text"
+            id="author"
+            value={author}
+            onChange={(e) => setAuthor(e.target.value)}
+            placeholder="Enter author name"
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="tags">Tags (optional)</label>
+          <input
+            type="text"
+            id="tags"
+            value={tags}
+            onChange={(e) => setTags(e.target.value)}
+            placeholder="Enter tags (comma separated)"
+          />
+        </div>
+
+        <button type="submit" className="submit-btn">Add Story</button>
+      </form>
+    </div>
   );
 };
 
-export default AddStoryModal;
+export default AddStoryModel;

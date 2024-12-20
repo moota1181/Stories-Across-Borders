@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 
 function authenticateToken(req, res, next) {
   const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1]; // استخراج التوكن من الـ Header
+  const token = authHeader && authHeader.split(" ")[1];  
 
   if (!token) {
     return res.status(401).json({ error: true, message: "Access token is missing." });
@@ -12,7 +12,7 @@ function authenticateToken(req, res, next) {
     if (err) {
       return res.status(403).json({ error: true, message: "Invalid or expired access token." });
     }
-    req.user = user; // تخزين بيانات المستخدم المستخلصة من التوكن
+    req.user = user; 
     next();
   });
 }

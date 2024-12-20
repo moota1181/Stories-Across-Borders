@@ -276,12 +276,11 @@ app.use(cors({origin: "*",}));
       
       app.get("/getReviews/:itemId", async (req, res) => {
         try {
-          const { itemId } = req.params; // جلب itemId من الـ URL
+          const { itemId } = req.params; 
       
-          // جلب المراجعات بناءً على itemId
           const reviews = await Review.find({ itemId })
-            .populate("userId", "fullName email") // جلب بيانات المستخدم (مثل الاسم والبريد الإلكتروني)
-            .sort({ createdAt: -1 }); // ترتيب المراجعات من الأحدث إلى الأقدم
+            .populate("userId", "fullName email") 
+            .sort({ createdAt: -1 }); 
       
           return res.status(200).json({
             error: false,
