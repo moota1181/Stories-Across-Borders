@@ -1,15 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Container, Grid, Card, CardContent, Typography, Box, Rating, CircularProgress, Button } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Container, Grid, Card, CardContent, Typography, Box, Rating, CircularProgress, Button, CardMedia } from '@mui/material';
+import { Link, useNavigate } from 'react-router-dom';
 import AddStoryModal from './AddStoryModal';
 
 const Homepage = () => {
   const [stories, setStories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [openModal, setOpenModal] = useState(false);
+  const [cart, setCart] = useState(() => {
+    const savedCart = localStorage.getItem('cart');
+    return savedCart ? JSON.parse(savedCart) : [];
+  }); 
+  const navigate = useNavigate();
 
-  // Function to fetch stories from the backend
+  // Fetch all stories from the backend
   useEffect(() => {
     const fetchStories = async () => {
       try {
@@ -17,6 +22,7 @@ const Homepage = () => {
         setStories(response.data.stories);
       } catch (error) {
         console.error('Error fetching stories:', error);
+        alert('Failed to load stories. Please try again later.');
       } finally {
         setLoading(false);
       }
@@ -25,13 +31,29 @@ const Homepage = () => {
     fetchStories();
   }, []);
 
-  // Function to handle opening the modal
+  // Function to fetch a single story and add it to the cart
+  const fetchStory = async (storyId) => {
+    try {
+      const response = await axios.get(`http://localhost:5000/getStories/${storyId}`);
+      setCart((prevCart) => {
+        const updatedCart = [...prevCart, response.data.story];
+        localStorage.setItem('cart', JSON.stringify(updatedCart)); // Save cart to localStorage
+        return updatedCart;
+      });
+    } catch (err) {
+      console.error('Error fetching story details', err);
+      alert('Failed to add story to cart. Please try again later.');
+    }
+  };
+
+  // Open and close the modal
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
 
-  // Function to add a story to the cart
-  const handleAddToCart = (storyId) => {
-    console.log('Added to cart:', storyId);
+  // Add a story to the cart and navigate to the cart page
+  const handleAddToCart = async (storyId) => {
+    await fetchStory(storyId); 
+    
   };
 
   if (loading) {
@@ -49,7 +71,6 @@ const Homepage = () => {
         Welcome to the Story Sharing Platform
       </Typography>
 
-      {/* زر Add Story */}
       <Box display="flex" justifyContent="center" mb={3}>
         <Button 
           variant="contained" 
@@ -61,7 +82,6 @@ const Homepage = () => {
         </Button>
       </Box>
 
-      {/* زر Help and Support */}
       <Box display="flex" justifyContent="center" mb={3}>
         <Link to="/HelpandSupport" style={{ textDecoration: 'none' }}>
           <Button variant="contained" color="secondary">
@@ -75,16 +95,11 @@ const Homepage = () => {
           <Grid item xs={12} sm={6} md={4} key={story._id}>
             <Card sx={{ borderRadius: 2, boxShadow: 3, transition: 'transform 0.3s', '&:hover': { transform: 'scale(1.05)' } }}>
               {story.image && (
-                <img
-                  src={story.image}
+                <CardMedia
+                  component="img"
+                  height="200"
+                  image={story.image}
                   alt={story.title}
-                  style={{
-                    width: '100%',
-                    height: '200px',
-                    objectFit: 'cover',
-                    borderTopLeftRadius: '8px',
-                    borderTopRightRadius: '8px',
-                  }}
                 />
               )}
               <CardContent>
@@ -111,8 +126,6 @@ const Homepage = () => {
                   color="secondary"
                   onClick={() => handleAddToCart(story._id)}
                   sx={{ marginTop: 2 }}
-                  component={Link} 
-                  to="/cart"
                 >
                   Add to Cart
                 </Button>

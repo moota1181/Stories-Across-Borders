@@ -5,14 +5,12 @@ import Homepage from "./components/auth/Homepage";
 import StoryDetails from "./components/auth/StoryDetails";
 import AddStoryModal from "./components/auth/AddStoryModal";
 import HelpandSupport from "./components/HelpandSupport";
-
+import CartPage from "./components/CartPage";
 
 // import Home from "./components/Landing/Home";
 // import * as ROUTES from "./constants/routes";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import CartPage from "./components/CartPage"; 
-
 const theme = createTheme();
 
 function App() {
@@ -30,6 +28,7 @@ function App() {
           <Route path={"/story/:storyId"} element={<StoryDetails />} />
           <Route path={"/AddStoryModal"} element={<AddStoryModal />} />
           <Route path={"/HelpandSupport"} element={<HelpandSupport />} />
+          <Route path={"/CartPage"} element={<CartPage />} />
 
 
         </Routes>
