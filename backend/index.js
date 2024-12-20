@@ -167,7 +167,7 @@ app.use(cors({origin: "*",}));
       
       
         
-      app.post("/addStory", authenticateToken, upload.single("image"), async (req, res) => {
+      app.post("/addStory", authenticateToken,upload.single("image"), async (req, res) => {
         try {
           const { userId } = req.user; 
           const { title, content, destination } = req.body;
@@ -242,10 +242,9 @@ app.use(cors({origin: "*",}));
       
       app.post("/addReview", authenticateToken, async (req, res) => {
         try {
-          const { itemId, itemType, rating, comment } = req.body; // إضافة itemType و itemId
+          const { itemId, itemType, rating, comment } = req.body; 
           const { userId } = req.user;
       
-          // التحقق من وجود itemId و rating و itemType
           if (!itemId || !rating || !itemType) {
             return res.status(400).json({ error: true, message: "Item ID, rating, and item type are required." });
           }
@@ -254,11 +253,10 @@ app.use(cors({origin: "*",}));
             return res.status(400).json({ error: true, message: "Rating must be between 1 and 5." });
           }
       
-          // إنشاء المراجعة
           const review = new Review({
             userId,
-            itemId,    // المعرف الخاص بالعنصر (مثل storyId أو productId)
-            itemType,  // نوع العنصر (مثل "story" أو "product")
+            itemId,    
+            itemType, 
             rating,
             comment,
           });

@@ -5,6 +5,8 @@ import Homepage from "./components/auth/Homepage";
 import StoryDetails from "./components/auth/StoryDetails";
 import AddStoryModal from "./components/auth/AddStoryModal";
 import HelpandSupport from "./components/HelpandSupport";
+import UpdateUserPage from "./components/auth/UpdateUserPage";
+import Review from "./components/auth/Review"
 
 
 // import Home from "./components/Landing/Home";
@@ -30,6 +32,10 @@ function App() {
           <Route path={"/story/:storyId"} element={<StoryDetails />} />
           <Route path={"/AddStoryModal"} element={<AddStoryModal />} />
           <Route path={"/HelpandSupport"} element={<HelpandSupport />} />
+          <Route path={"/updateUser"} element={<UpdateUserPage />} />
+          <Route path={"/CartPage"} element={<CartPage />} />
+          <Route path={"/Review"} element={<Review />} />
+
 
 
         </Routes>

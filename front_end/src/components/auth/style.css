@@ -1,0 +1,79 @@
+/* Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  /* Container Styles */
+  .MuiContainer-root {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  /* Box Styles */
+  .MuiBox-root {
+    padding: 20px;
+    background-color: #f4f7fa;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Typography Styles */
+  .MuiTypography-root {
+    color: #333;
+  }
+  
+  /* Header Styles */
+  .MuiTypography-h4 {
+    font-size: 32px;
+    color: #3498db;
+    margin-bottom: 20px;
+    font-weight: bold;
+  }
+  
+  /* Paragraph Styles */
+  .MuiTypography-body1 {
+    font-size: 16px;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 15px;
+  }
+  
+  /* Link Styles */
+  a {
+    color: #3498db;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Responsive Styles */
+  @media (max-width: 768px) {
+    .MuiTypography-h4 {
+      font-size: 28px;
+    }
+  
+    .MuiTypography-body1 {
+      font-size: 14px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .MuiContainer-root {
+      padding: 15px;
+    }
+  
+    .MuiTypography-h4 {
+      font-size: 24px;
+    }
+  
+    .MuiTypography-body1 {
+      font-size: 13px;
+    }
+  }
+  
