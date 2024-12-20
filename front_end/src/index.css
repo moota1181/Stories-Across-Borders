@@ -11,3 +11,50 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+@layer components {
+  .input-box {
+    width: 100%;
+    font-size: 1rem;
+    background-color: rgba(207, 250, 254, 0.05);
+    border-radius: 0.5rem;
+    padding: 1rem 2rem;
+    margin-bottom: 1rem;
+    outline: none;
+  }
+  
+  .btn-primary {
+    width: 100%;
+    font-size: 1rem;
+    font-weight: 500; /* Changed 'medium' to numeric value */
+    color: #ffffff;
+    background-color: #03a9f4;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2), 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .btn-light {
+    background-color: #ecfeff;
+    color: #3498db;
+    box-shadow: none; /* Simplified box-shadow */
+    border: 1px solid #ecfeff;
+  }
+  
+  .login-ui-box {
+    width: 20rem;
+    height: 450px;
+    border-radius: 50%;
+    background-color: #3498db;
+    position: absolute;
+    transform: rotate(45deg);
+  }
+  
+  .icon-btn {
+    font-size: 22px;
+    color: #777777;
+    cursor: pointer;
+  }
+  
+  .icon-btn:hover {
+    color: #ff0000;
+  }
+}
