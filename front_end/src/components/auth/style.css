@@ -5,19 +5,33 @@
     box-sizing: border-box;
     font-family: 'Arial', sans-serif;
   }
+  body{
+    background-color: #7a7e83;
+    font-family: 'Arial', sans-serif;
+  }
   
   /* Container Styles */
   .MuiContainer-root {
-    padding: 20px;
-    max-width: 800px;
-    margin: 0 auto;
+    display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #57595b;
+  flex-direction: column;
+  width: 25%;
+  margin: 0 auto;
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 100px;
   }
   
   /* Box Styles */
   .MuiBox-root {
     padding: 20px;
     background-color: #f4f7fa;
+    width: 100%;
     border-radius: 8px;
+    transition: background-color 0.3s ease;
+    
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   }
   
@@ -75,5 +89,6 @@
     .MuiTypography-body1 {
       font-size: 13px;
     }
+
   }
   

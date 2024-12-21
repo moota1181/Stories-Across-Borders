@@ -37,6 +37,7 @@ const LoginPage = () => {
     }
   };
   return (
+    <>
     <div className="container">
       <div className="left-panel">
         <h2>Capture Your Journeys</h2>
@@ -59,11 +60,12 @@ const LoginPage = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <button type="submit" className="btn" >LOGIN</button>
+          <button type="submit" className="button" >LOGIN</button>
         </form>
-        <Link to="/signup" className="link" >Create Account</Link>
+        <Link to="/signup" className="link"  ></Link>
       </div>
-    </div>
+      </div>
+      </>
   );
 };
 

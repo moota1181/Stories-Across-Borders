@@ -7,6 +7,7 @@ const UpdateUserPage = () => {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
+  const [password, setPassword] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
 
@@ -19,13 +20,17 @@ const UpdateUserPage = () => {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           },
         });
-        const { fullName, email } = response.data.user;
+        const { fullName, email , password } = response.data.user;
         setFullName(fullName);
         setEmail(email);
+        setPassword(password); // Set password for password field (optional)
+
       } catch (error) {
         console.error('Error fetching user data:', error);
         setError('Failed to fetch user data');
+
       }
+
     };
     
     getUserData();
@@ -37,7 +42,7 @@ const UpdateUserPage = () => {
     try {
       const response = await axios.put(
         'http://localhost:5000/updateUser',
-        { fullName, email },
+        { fullName, email , password },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -52,8 +57,10 @@ const UpdateUserPage = () => {
   };
 
   return (
-    <div className="update-user-container">
-      <h2>Update Your Information</h2>
+    <span>
+      <div className="container-update">
+       <div className="update-user-container">
+        <h2>Update Your Information</h2>
       
       {error && <div className="error-message">{error}</div>}
       {successMessage && <div className="success-message">{successMessage}</div>}
@@ -77,11 +84,24 @@ const UpdateUserPage = () => {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
+          </div>
+          <div className="form-group">
+          <label>password:</label>
+          <input
+                type="password"
+                className="password-input"
+            value={password}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
         </div>
 
+
         <button type="submit" className="btn">Update</button>
-      </form>
-    </div>
+        </form>
+       </div >
+      </div>  
+    </span>
   );
 };
 

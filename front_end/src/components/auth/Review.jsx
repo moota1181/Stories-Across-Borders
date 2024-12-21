@@ -76,7 +76,7 @@ function App() {
           onChange={(e) => setReviewText(e.target.value)}
         />
 
-        <button type="submit">Submit Review</button>
+        <button type="submit"className='btn'>Submit Review</button>
       </form>
     </div>
   );
