@@ -8,13 +8,12 @@ import HelpandSupport from "./components/HelpandSupport";
 import UpdateUserPage from "./components/auth/UpdateUserPage";
 import Review from "./components/auth/Review"
 
+import CartPage from "./components/CartPage";
 
 // import Home from "./components/Landing/Home";
 // import * as ROUTES from "./constants/routes";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import CartPage from "./components/CartPage"; 
-
 const theme = createTheme();
 
 function App() {
