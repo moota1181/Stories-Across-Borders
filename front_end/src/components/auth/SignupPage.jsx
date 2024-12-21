@@ -2,11 +2,11 @@ import React from 'react';
 import './SignupPage.css';
 import { useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link , useNavigate } from 'react-router-dom';
 
 const SignupPage = () => {
   const [fullName, setUser] = useState('');
-
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -19,7 +19,7 @@ const SignupPage = () => {
       console.log('Signup Failed: ' + result.error.message);
 
     } else {
-      alert('Signup Successful!');
+      navigate('/Homepage');
       console.log('User Data:', result);
     }
   }

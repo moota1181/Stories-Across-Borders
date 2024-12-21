@@ -89,7 +89,13 @@ const Homepage = () => {
           </Button>
         </Link>
       </Box>
-
+      <Box display="flex" justifyContent="center" mb={3}>
+        <Link to="/CartPage" style={{ textDecoration: 'none' }}>
+          <Button variant="contained" color="secondary">
+            Go to Cart
+          </Button>
+        </Link>
+      </Box>
       <Grid container spacing={4}>
         {stories.map((story) => (
           <Grid item xs={12} sm={6} md={4} key={story._id}>
