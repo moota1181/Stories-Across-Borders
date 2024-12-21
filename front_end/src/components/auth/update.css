@@ -1,0 +1,30 @@
+.update-user-container {
+    width: 300px; /* يمكنك تعديل هذا الحجم حسب الحاجة */
+    margin: 0 auto;
+  }
+  
+  .form-group {
+    margin-bottom: 10px;
+  }
+  
+  input[type="text"], input[type="email"] {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    margin-top: 5px;
+  }
+  
+  button[type="submit"] {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    background-color: #4CAF50; /* اللون الذي تفضله */
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: #45a049;
+  }
+  
